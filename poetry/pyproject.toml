@@ -1,0 +1,22 @@
+[project]
+name = "pychub-poetry-plugin"
+version = "0.1.0"
+description = "Poetry build plugin for pychub"
+authors = [
+    { name = "Steve Storck", email = "steve973@gmail.com" }
+]
+dependencies = [
+    "pychub>=0.1.0"
+]
+packages = [{ include = "pychub_poetry_plugin", from = "src" }]
+requires-python = "^3.9"
+
+[project.entry-points."poetry.application.plugin"]
+pychub-poetry-plugin = "pychub_poetry_plugin.plugin:PychubPoetryPlugin"
+
+[tool.poetry.dependencies]
+pychub = { source = "kdp-pypi" }
+
+[build-system]
+requires = ["poetry-core>=2.1.0"]
+build-backend = "poetry.core.masonry.api"

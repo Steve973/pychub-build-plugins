@@ -1,0 +1,33 @@
+[project]
+name = "test-pkg"
+version = "0.0.1"
+description = "Integration test for pychub-pdm-plugin"
+requires-python = ">=3.9"
+dependencies = [
+  "pychub @ http://192.168.0.3:8080/repository/kdp-pypi/packages/pychub/0.1.0/pychub-0.1.0-py3-none-any.whl",
+  "attrs>=23.2.0"
+]
+packages = [{ include = "test_pkg" }]
+
+[build-system]
+requires = ["pdm-backend", "pychub-pdm-plugin"]
+build-backend = "pdm.backend"
+
+[tool.pychub.package]
+name = "test-proj"
+version = "0.0.1"
+wheel = "dist/test_pkg-0.0.1-py3-none-any.whl"
+includes = [
+  "includes/README.md::docs/",
+  "includes/test.cfg::conf/",
+  "includes/info.txt::etc/other.txt",
+  "includes/test.txt"
+]
+
+[tool.pychub.package.scripts]
+pre  = ["scripts/pre_script.sh"]
+post = ["scripts/post_script.sh"]
+
+[tool.pychub.package.metadata]
+maintainer = "you@example.com"
+test = "pdm"

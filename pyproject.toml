@@ -1,0 +1,43 @@
+[project]
+name = "pychub-build-plugins"
+version = "0.1.0"
+description = "Build tool plugin collection for pychub"
+authors = [
+    { name = "Steve Storck", email = "steve973@gmail.com" }
+]
+readme = "README.md"
+license = "MIT"
+dependencies = [
+    "pychub>=0.1.0",
+    "pychub-hatch-plugin @ file:./hatch",
+    "pychub-pdm-plugin @ file:./pdm",
+    "pychub-poetry-plugin @ file:./poetry"
+]
+requires-python = "^3.9"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.4.1",
+    'tomli>=2.2; python_version < "3.11"',
+    "hatch>=1.14.0",
+    "pdm>=2.25.0"
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+pychub = { source = "kdp-pypi" }
+
+[tool.poetry-monoranger-plugin]
+enabled = true
+monorepo-root = "../pychub-build-plugins"
+
+[[tool.poetry.source]]
+name = "kdp-pypi"
+url = "http://192.168.0.3:8080/repository/kdp-pypi/simple/"
+priority = "supplemental"
+
+[build-system]
+requires = ["poetry-core>=2.1.0"]
+build-backend = "poetry.core.masonry.api"

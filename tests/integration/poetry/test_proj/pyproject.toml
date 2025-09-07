@@ -1,0 +1,38 @@
+[project]
+name = "test-pkg"
+version = "0.0.1"
+description = "Integration test for pychub-poetry-plugin"
+requires-python = ">=3.9"
+dependencies = [
+  "pychub @ http://192.168.0.3:8080/repository/kdp-pypi/packages/pychub/0.1.0/pychub-0.1.0-py3-none-any.whl",
+  "attrs>=23.2.0"
+]
+
+[build-system]
+requires = ["poetry-core>=2.1.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [{ include = "test_pkg" }]
+
+[tool.poetry.requires-plugins]
+pychub-poetry-plugin = "^0.1.0"
+
+[tool.pychub.package]
+name = "test-proj"
+version = "0.0.1"
+wheel = "dist/test_pkg-0.0.1-py3-none-any.whl"
+includes = [
+  "includes/README.md::docs/",
+  "includes/test.cfg::conf/",
+  "includes/info.txt::etc/other.txt",
+  "includes/test.txt"
+]
+
+[tool.pychub.package.scripts]
+pre  = ["scripts/pre_script.sh"]
+post = ["scripts/post_script.sh"]
+
+[tool.pychub.package.metadata]
+maintainer = "you@example.com"
+test = "poetry"
