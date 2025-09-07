@@ -61,13 +61,17 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import os, re, pathlib
+          import os, re, sys, pathlib
           dist = pathlib.Path("dist")
-          # Use any one plugin wheel as the source of truth (they’re all the same version)
-          whl = next(sorted(dist.glob("pychub_hatch_plugin-*.whl")))
-          m = re.search(r"pychub_hatch_plugin-([0-9]\.[0-9]\.[0-9])-", whl.name)
+          wheels = sorted(dist.glob("pychub_hatch_plugin-*.whl"))
+          if not wheels:
+              print("No hatch plugin wheel found in dist/", file=sys.stderr)
+              sys.exit(1)
+          whl = wheels[0]  # or: next(iter(wheels))
+          m = re.search(r"pychub_hatch_plugin-([0-9]+\.[0-9]+\.[0-9]+)-", whl.name)
           if not m:
-              raise SystemExit(f"Cannot parse version from {whl.name}")
+              print(f"Cannot parse MAJOR.MINOR.PATCH from {whl.name}", file=sys.stderr)
+              sys.exit(1)
           ver = m.group(1)
           print("Detected version:", ver)
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
