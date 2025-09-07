@@ -10,21 +10,25 @@ print_status() {
   local color_red
   local color_yellow
 
-  color_reset="$(tput sgr0)"
-  color_blue="$(tput setaf 4)"
-  color_green="$(tput setaf 2)"
-  color_red="$(tput setaf 1)"
-  color_yellow="$(tput setaf 3)"
+  if tty -s; then
+    color_reset="$(tput sgr0)"
+    color_blue="$(tput setaf 4)"
+    color_green="$(tput setaf 2)"
+    color_red="$(tput setaf 1)"
+    color_yellow="$(tput setaf 3)"
 
-  printf "%-50s" "$msg"
+    printf "%-50s" "$msg"
 
-  case "$status" in
-    fail) printf "[ %sFAIL%s ]\n" "${color_red}" "${color_reset}" ;;
-    info) printf "[ %sINFO%s ]\n" "${color_blue}" "${color_reset}" ;;
-    ok)   printf "[ %sOK%s   ]\n" "${color_green}" "${color_reset}" ;;
-    warn) printf "[ %sWARN%s ]\n" "${color_yellow}" "${color_reset}" ;;
-    *)    printf "[ %s....%s ]\n" "${color_yellow}" "${color_reset}" ;;
-  esac
+    case "$status" in
+      fail) printf "[ %sFAIL%s ]\n" "${color_red}" "${color_reset}" ;;
+      info) printf "[ %sINFO%s ]\n" "${color_blue}" "${color_reset}" ;;
+      ok)   printf "[ %sOK%s   ]\n" "${color_green}" "${color_reset}" ;;
+      warn) printf "[ %sWARN%s ]\n" "${color_yellow}" "${color_reset}" ;;
+      *)    printf "[ %s....%s ]\n" "${color_yellow}" "${color_reset}" ;;
+    esac
+  else
+    printf "[ %s ] %s\n", "$status" "$msg"
+  fi
 }
 
 print_status "Setting up pychubby-dev environment..." info
