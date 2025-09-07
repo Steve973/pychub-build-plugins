@@ -27,7 +27,7 @@ print_status() {
       *)    printf "[ %s....%s ]\n" "${color_yellow}" "${color_reset}" ;;
     esac
   else
-    printf "[ %s ] %s\n", "$status" "$msg"
+    printf "[ %s ] %s\n" "$status" "$msg"
   fi
 }
 
@@ -45,7 +45,7 @@ fi
 source .venv/bin/activate && print_status "Activated virtual environment" ok
 
 # Step 3: Ensure pip is upgraded before using it
-python3 -m pip install --upgrade pip poetry build >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
+python3 -m pip install --upgrade pip poetry build pytest >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
 
 # Step 4: Add monoranger plugin (skip if already installed)
 if ! poetry self show plugins | grep -q "poetry-monoranger-plugin"; then
