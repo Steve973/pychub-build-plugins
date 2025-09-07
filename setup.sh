@@ -33,7 +33,7 @@ print_status() {
 
 print_status "Setting up pychubby-dev environment..." info
 
-# Step 1: Create .venv symlink (for IDE support)
+# Step 1: Create .venv
 if [ ! -d ".venv" ]; then
   python3 -m venv .venv && print_status "Created virtual environment" ok
 else
@@ -43,6 +43,10 @@ fi
 # Step 2: Activate it
 # shellcheck disable=SC1091
 source .venv/bin/activate && print_status "Activated virtual environment" ok
+
+# Make Poetry use THIS env (no nested virtualenvs)
+export POETRY_VIRTUALENVS_CREATE=false
+export POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=true
 
 # Step 3: Ensure pip is upgraded before using it
 python3 -m pip install --upgrade pip poetry build pytest pychub >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok

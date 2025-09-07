@@ -35,4 +35,4 @@ runs:
       run: |
         sh setup.sh
         source .venv/bin/activate
-        poetry run pytest "${{ inputs.pytest-path }}" -q
+        poetry run pytest -q "${{ inputs.pytest-path }}"
