@@ -24,7 +24,6 @@ jobs:
       - uses: ./.github/actions/python-poetry
         with:
           python: ${{ matrix.python }}
-          use-poetry: "false"
           pytest-path: tests/integration
 
   build:
