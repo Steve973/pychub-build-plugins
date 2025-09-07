@@ -15,11 +15,7 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["test_pkg"]
 
-[tool.hatch.build.hooks.pychub]
 [tool.hatch.build.targets.wheel.hooks.pychub]
-
-[tool.hatch.metadata]
-allow-direct-references = true
 
 [tool.pychub.package]
 name = "test-proj"

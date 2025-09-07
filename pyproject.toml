@@ -1,6 +1,6 @@
 [project]
 name = "pychub-build-plugins"
-version = "0.1.0"
+version = "0.2.0"
 description = "Build tool plugin collection for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
@@ -23,7 +23,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pychub = ">=1.0.0"
+pychub = "^1.0.0"
 pychub-hatch-plugin  = { path = "hatch",  develop = true }
 pychub-pdm-plugin    = { path = "pdm",    develop = true }
 pychub-poetry-plugin = { path = "poetry", develop = true }

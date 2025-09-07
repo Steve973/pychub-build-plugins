@@ -5,6 +5,8 @@ description = "Pdm build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
+readme = "README.md"
+license = "MIT"
 dependencies = [
     "pychub>=1.0.0",
     "pdm>=2.25.0,<3.0.0"

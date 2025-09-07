@@ -5,6 +5,8 @@ description = "Hatch build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
+readme = "README.md"
+license = "MIT"
 dependencies = [
     "pychub>=1.0.0",
     "hatchling>=1.27.0"
