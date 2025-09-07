@@ -92,7 +92,7 @@ jobs:
 
   publish_test_pypi:
     outputs:
-      published: ${{ steps.upload.conclusion == 'success' }}
+      published: ${{ (steps.upload.conclusion == 'success') && 'true' || 'false' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -117,6 +117,7 @@ jobs:
           done
 
       - name: Publish to TestPyPI
+        id: upload
         if: github.ref == 'refs/heads/main'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -128,7 +129,7 @@ jobs:
 
   publish:
     outputs:
-      published: ${{ steps.upload.conclusion == 'success' }}
+      published: ${{ (steps.upload.conclusion == 'success') && 'true' || 'false' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -153,6 +154,7 @@ jobs:
           done
 
       - name: Publish to PyPI.org
+        id: upload
         if: startsWith(github.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -171,7 +173,10 @@ jobs:
 
   post-publish-smoke-test:
     needs: [publish, publish_test_pypi]
-    if: ${{ always() && (fromJSON(needs.publish.outputs.published || 'false') || fromJSON(needs.publish_test_pypi.outputs.published || 'false')) }}
+    if: ${{ always() && (
+          needs.publish.outputs.published == 'true' ||
+          needs.publish_test_pypi.outputs.published == 'true'
+        ) }}
     runs-on: ubuntu-latest
     env:
       INDEX_URL: ${{ (fromJSON(needs.publish.outputs.published || 'false') && 'https://pypi.org/simple/') || 'https://test.pypi.org/simple/' }}
