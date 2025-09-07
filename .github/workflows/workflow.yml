@@ -45,10 +45,10 @@ jobs:
             **/requirements*.txt
 
       - name: Install build tool
-        run: pip install -U build
+        run: pip install -U poetry build
 
       - name: Build distribution
-        run: python -m build
+        run: poetry build
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
