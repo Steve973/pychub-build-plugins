@@ -25,8 +25,7 @@ set -euo pipefail
 source "{activate}"
 
 # Make Poetry use THIS env (no nested virtualenvs)
-export POETRY_VIRTUALENVS_CREATE=false
-export POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=true
+poetry env use system
 
 pip install --upgrade pip poetry build pychub
 if [ "pdm" == "{backend}" ]; then

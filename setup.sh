@@ -45,8 +45,7 @@ fi
 source .venv/bin/activate && print_status "Activated virtual environment" ok
 
 # Make Poetry use THIS env (no nested virtualenvs)
-export POETRY_VIRTUALENVS_CREATE=false
-export POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=true
+poetry env use system
 
 # Step 3: Ensure pip is upgraded before using it
 python3 -m pip install --upgrade pip poetry build pytest pychub >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
