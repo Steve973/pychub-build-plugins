@@ -92,7 +92,7 @@ jobs:
 
   publish_test_pypi:
     outputs:
-      published: ${{ github.ref != 'refs/heads/main' || steps.upload.conclusion == 'success' }}
+      published: ${{ steps.upload.conclusion == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -128,7 +128,7 @@ jobs:
 
   publish:
     outputs:
-      published: ${{ !startsWith(github.ref, 'refs/tags/') || steps.upload.conclusion == 'success' }}
+      published: ${{ steps.upload.conclusion == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -171,11 +171,10 @@ jobs:
 
   post-publish-smoke-test:
     needs: [publish, publish_test_pypi]
-    if: ${{ always() && (
-          needs.publish.outputs.published == 'true' ||
-          needs.publish_test_pypi.outputs.published == 'true'
-        ) }}
+    if: ${{ always() && (fromJSON(needs.publish.outputs.published || 'false') || fromJSON(needs.publish_test_pypi.outputs.published || 'false')) }}
     runs-on: ubuntu-latest
+    env:
+      INDEX_URL: ${{ (fromJSON(needs.publish.outputs.published || 'false') && 'https://pypi.org/simple/') || 'https://test.pypi.org/simple/' }}
     steps:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
@@ -185,8 +184,7 @@ jobs:
           python -m venv .v && source .v/bin/activate
           python -m pip install -U pip
           python -m pip install \
-            --index-url https://test.pypi.org/simple/ \
-            --extra-index-url https://pypi.org/simple/ \
+            --index-url $INDEX_URL \
             pychub-hatch-plugin pychub-pdm-plugin pychub-poetry-plugin
           python - <<'PY'
           from importlib.metadata import entry_points
