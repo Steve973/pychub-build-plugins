@@ -44,11 +44,11 @@ jobs:
             **/poetry.lock
             **/requirements*.txt
 
-      - name: Install build tool
-        run: pip install -U poetry build
-
       - name: Build distribution
-        run: poetry build
+        run: |
+          sh setup.sh
+          source .venv/bin/activate
+          poetry build
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
@@ -81,6 +81,8 @@ jobs:
 
       - name: Twine check
         run: |
+          sh setup.sh
+          source .venv/bin/activate
           pip install -U twine
           twine check dist/*
 
@@ -98,11 +100,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install build tools
-        run: pip install build
-
       - name: Build distribution
-        run: python -m build
+        run: |
+          sh setup.sh
+          source .venv/bin/activate
+          poetry build
 
       - name: Publish to TestPyPI
         if: github.ref == 'refs/heads/main'
