@@ -24,6 +24,10 @@ set -euo pipefail
 # Activate the temporary test venv
 source "{activate}"
 
+# Make Poetry use THIS env (no nested virtualenvs)
+export POETRY_VIRTUALENVS_CREATE=false
+export POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=true
+
 pip install --upgrade pip poetry build pychub
 if [ "pdm" == "{backend}" ]; then
   pip install "pdm==2.25.4" pdm-backend
