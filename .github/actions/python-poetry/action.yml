@@ -29,11 +29,6 @@ runs:
           **/poetry.lock
           **/requirements*.txt
 
-    - name: Prepare environment
-      shell: bash
-      run: |
-        sh setup.sh
-
     - name: Run pytest (optional)
       if: ${{ inputs.pytest-path != '' }}
       shell: bash
@@ -41,4 +36,6 @@ runs:
         POETRY_VIRTUALENVS_CREATE: "false"
         POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON: "true"
       run: |
+        sh setup.sh
+        source .venv/bin/activate
         poetry run pytest "${{ inputs.pytest-path }}" -q
