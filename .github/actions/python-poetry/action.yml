@@ -37,5 +37,8 @@ runs:
     - name: Run pytest (optional)
       if: ${{ inputs.pytest-path != '' }}
       shell: bash
+      env:
+        POETRY_VIRTUALENVS_CREATE: "false"
+        POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON: "true"
       run: |
         poetry run pytest "${{ inputs.pytest-path }}" -q
