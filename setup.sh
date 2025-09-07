@@ -47,6 +47,9 @@ source .venv/bin/activate && print_status "Activated virtual environment" ok
 # Step 3: Ensure pip is upgraded before using it
 python3 -m pip install --upgrade pip poetry build pytest pychub >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
 
+# Make Poetry use THIS env (no nested virtualenvs)
+poetry env use system
+
 # Step 4: Add monoranger plugin (skip if already installed)
 if ! poetry self show plugins | grep -q "poetry-monoranger-plugin"; then
   if poetry self add poetry-monoranger-plugin >/dev/null 2>&1; then
