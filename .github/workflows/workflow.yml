@@ -92,7 +92,7 @@ jobs:
 
   publish_test_pypi:
     outputs:
-      published: ${{ steps.upload.outcome == 'success' }}
+      published: ${{ github.ref != 'refs/heads/main' || steps.upload.conclusion == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -128,7 +128,7 @@ jobs:
 
   publish:
     outputs:
-      published: ${{ steps.upload.outcome == 'success' }}
+      published: ${{ !startsWith(github.ref, 'refs/tags/') || steps.upload.conclusion == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
