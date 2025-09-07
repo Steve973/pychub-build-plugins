@@ -41,12 +41,9 @@ fi
 source .venv/bin/activate && print_status "Activated virtual environment" ok
 
 # Step 3: Ensure pip is upgraded before using it
-python3 -m pip install --upgrade pip >/dev/null 2>&1 && print_status "Upgraded pip" ok
+python3 -m pip install --upgrade pip poetry build >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
 
-# Step 4: Install poetry (isolated to venv)
-python3 -m pip install poetry >/dev/null 2>&1 && print_status "Installed poetry" ok
-
-# Step 5: Add monoranger plugin (skip if already installed)
+# Step 4: Add monoranger plugin (skip if already installed)
 if ! poetry self show plugins | grep -q "poetry-monoranger-plugin"; then
   if poetry self add poetry-monoranger-plugin >/dev/null 2>&1; then
     print_status "Enabled poetry-monoranger-plugin" ok
@@ -58,7 +55,7 @@ else
   print_status "poetry-monoranger-plugin already enabled" warn
 fi
 
-# Step 6: Install workspace dependencies
+# Step 5: Install workspace dependencies
 if poetry install; then
   print_status "Installed all project dependencies" ok
 else
