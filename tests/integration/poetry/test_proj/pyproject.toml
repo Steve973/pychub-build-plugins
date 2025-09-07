@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "Integration test for pychub-poetry-plugin"
 requires-python = ">=3.9"
 dependencies = [
-  "pychub @ http://192.168.0.3:8080/repository/kdp-pypi/packages/pychub/0.1.0/pychub-0.1.0-py3-none-any.whl",
+  "pychub>=1.0.0",
   "attrs>=23.2.0"
 ]
 

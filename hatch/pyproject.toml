@@ -6,7 +6,7 @@ authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
 dependencies = [
-    "pychub>=0.1.0",
+    "pychub>=1.0.0",
     "hatchling>=1.27.0"
 ]
 packages = [{ include = "pychub_hatch_plugin", from = "src" }]
@@ -17,9 +17,6 @@ classifiers = [
 
 [project.entry-points.hatch]
 pychub = "pychub_hatch_plugin.hooks"
-
-[tool.poetry.dependencies]
-pychub = { source = "kdp-pypi" }
 
 [build-system]
 requires = ["poetry-core"]

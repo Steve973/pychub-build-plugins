@@ -8,7 +8,7 @@ authors = [
 readme = "README.md"
 license = "MIT"
 dependencies = [
-    "pychub>=0.1.0",
+    "pychub>=1.0.0",
     "pychub-hatch-plugin @ file:./hatch",
     "pychub-pdm-plugin @ file:./pdm",
     "pychub-poetry-plugin @ file:./poetry"
@@ -26,17 +26,9 @@ test = [
 [tool.poetry]
 package-mode = false
 
-[tool.poetry.dependencies]
-pychub = { source = "kdp-pypi" }
-
 [tool.poetry-monoranger-plugin]
 enabled = true
 monorepo-root = "../pychub-build-plugins"
-
-[[tool.poetry.source]]
-name = "kdp-pypi"
-url = "http://192.168.0.3:8080/repository/kdp-pypi/simple/"
-priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core>=2.1.0"]
