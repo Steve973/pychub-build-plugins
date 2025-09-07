@@ -27,6 +27,8 @@ jobs:
           pytest-path: tests/integration
 
   build:
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
     needs:
       - test_integration
     runs-on: ubuntu-latest
@@ -53,6 +55,24 @@ jobs:
             poetry build -o ../dist/
             popd
           done
+
+      - id: get_version
+        name: Extract version from wheels
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, re, pathlib
+          dist = pathlib.Path("dist")
+          # Use any one plugin wheel as the source of truth (they’re all the same version)
+          whl = next(sorted(dist.glob("pychub_hatch_plugin-*.whl")))
+          m = re.search(r"pychub_hatch_plugin-([0-9]\.[0-9]\.[0-9])-", whl.name)
+          if not m:
+              raise SystemExit(f"Cannot parse version from {whl.name}")
+          ver = m.group(1)
+          print("Detected version:", ver)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"version={ver}\n")
+          PY
 
       - name: Upload hatch dist
         uses: actions/upload-artifact@v4
@@ -180,6 +200,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INDEX_URL: ${{ (fromJSON(needs.publish.outputs.published || 'false') && 'https://pypi.org/simple/') || 'https://test.pypi.org/simple/' }}
+      VER: ${{ needs.build.outputs.version }}
     steps:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
@@ -188,9 +209,12 @@ jobs:
         run: |
           python -m venv .v && source .v/bin/activate
           python -m pip install -U pip
-          python -m pip install \
-            --index-url $INDEX_URL \
-            pychub-hatch-plugin pychub-pdm-plugin pychub-poetry-plugin
+          EXTRA=""
+          if [ "$INDEX_URL" = "https://test.pypi.org/simple/" ]; then
+            EXTRA="--extra-index-url https://pypi.org/simple/"
+          fi
+          python -m pip install --index-url "$INDEX_URL" $EXTRA \
+          "pychub-hatch-plugin==$VER" "pychub-pdm-plugin==$VER" "pychub-poetry-plugin==$VER"
           python - <<'PY'
           from importlib.metadata import entry_points
           assert any(ep.name=="pychub" for ep in entry_points(group="hatch")), "hatch hook missing"
