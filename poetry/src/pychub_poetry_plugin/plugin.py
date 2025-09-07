@@ -1,12 +1,13 @@
+from pathlib import Path
+
 from cleo.events.console_command_event import ConsoleCommandEvent
-from cleo.events.console_terminate_event import ConsoleTerminateEvent
+from cleo.events.console_events import COMMAND, TERMINATE
 from cleo.events.event import Event
 from cleo.events.event_dispatcher import EventDispatcher
-from cleo.events.console_events import COMMAND, TERMINATE
-from poetry.plugins.application_plugin import ApplicationPlugin
 from poetry.console.application import Application
+from poetry.plugins.application_plugin import ApplicationPlugin
 from pychub.package.bt_options_processor import process_chubproject
-from pathlib import Path
+
 
 class PychubPoetryPlugin(ApplicationPlugin):
 
