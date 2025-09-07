@@ -90,7 +90,9 @@ jobs:
           pip install -U twine
           twine check dist/*
 
-  publish-test-pypi:
+  publish_test_pypi:
+    outputs:
+      published: ${{ steps.upload.outcome == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -125,6 +127,8 @@ jobs:
           skip-existing: true
 
   publish:
+    outputs:
+      published: ${{ steps.upload.outcome == 'success' }}
     needs: [check]
     runs-on: ubuntu-latest
     if: |
@@ -166,7 +170,11 @@ jobs:
           files: dist/*
 
   post-publish-smoke-test:
-    needs: [publish]
+    needs: [publish, publish_test_pypi]
+    if: ${{ always() && (
+          needs.publish.outputs.published == 'true' ||
+          needs.publish_test_pypi.outputs.published == 'true'
+        ) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v5
