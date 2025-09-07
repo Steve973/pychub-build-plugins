@@ -25,7 +25,7 @@ set -euo pipefail
 # Activate the temporary test venv
 source "{activate}"
 
-pip install --upgrade pip poetry
+pip install --upgrade pip poetry build
 if [ "pdm" == "{backend}" ]; then
   pip install "pdm==2.25.4" pdm-backend
 elif [ "hatch" == "{backend}" ]; then
@@ -36,7 +36,6 @@ if [ "pdm" == "{backend}" ]; then
   poetry run {backend} build --no-isolation -v
 elif [ "hatch" == "{backend}" ]; then
   poetry run python -m build --no-isolation -w
-  # poetry run {backend} build --no-isolation -t wheel
 else
   poetry run {backend} build
 fi
