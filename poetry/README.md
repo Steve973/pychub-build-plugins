@@ -21,8 +21,8 @@ plugin to your `pyproject.toml` file, and the standard `pychub` configuration.
 
 ### Adding the Plugin To Your `pyproject.toml` File
 
-Amend or add the plugin to the `[tool.poetry.requires-plugins` section so to
-let poetry know about the plugin and its version:
+Amend or add the plugin to the `[tool.poetry.requires-plugins` section to let
+poetry know about the plugin and its version:
 
 ```toml
 [tool.poetry.requires-plugins]

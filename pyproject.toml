@@ -1,6 +1,6 @@
 [project]
 name = "pychub-build-plugins"
-version = "0.2.0"
+version = "0.3.0"
 description = "Build tool plugin collection for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
@@ -9,6 +9,35 @@ readme = "README.md"
 license = "MIT"
 dynamic = [ "dependencies" ]
 requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Archiving :: Packaging",
+    "Topic :: System :: Installation/Setup",
+    "Topic :: System :: Software Distribution",
+    "Topic :: Utilities"
+]
+keywords = [
+    "bundle",
+    "chub",
+    "executable",
+    "package",
+    "packaging",
+    "zipapp"
+]
 
 [project.optional-dependencies]
 test = [

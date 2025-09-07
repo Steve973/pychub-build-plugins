@@ -1,6 +1,6 @@
 [project]
 name = "pychub-hatch-plugin"
-version = "0.2.0"
+version = "0.3.0"
 description = "Hatch build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
@@ -14,7 +14,34 @@ dependencies = [
 packages = [{ include = "pychub_hatch_plugin", from = "src" }]
 requires-python = ">=3.9"
 classifiers = [
-  "Framework :: Hatch",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: Hatch",
+    "Intended Audience :: Developers",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Archiving :: Packaging",
+    "Topic :: System :: Installation/Setup",
+    "Topic :: System :: Software Distribution",
+    "Topic :: Utilities"
+]
+keywords = [
+    "bundle",
+    "chub",
+    "executable",
+    "package",
+    "packaging",
+    "zipapp"
 ]
 
 [project.entry-points.hatch]
