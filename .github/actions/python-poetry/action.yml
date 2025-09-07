@@ -32,7 +32,7 @@ runs:
     - name: Install deps
       shell: bash
       run: |
-        python -m pip install -U pip wheel poetry pytest
+        python -m pip install -U pip wheel poetry pytest pychub
         poetry install
         echo "PYTHONPATH=$GITHUB_WORKSPACE/src" >> "$GITHUB_ENV"
 

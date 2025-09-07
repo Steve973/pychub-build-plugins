@@ -24,7 +24,7 @@ set -euo pipefail
 # Activate the temporary test venv
 source "{activate}"
 
-pip install --upgrade pip poetry build pychub
+pip install --upgrade pip poetry build
 if [ "pdm" == "{backend}" ]; then
   pip install "pdm==2.25.4" pdm-backend
 elif [ "hatch" == "{backend}" ]; then
