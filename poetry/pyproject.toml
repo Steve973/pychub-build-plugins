@@ -9,7 +9,7 @@ dependencies = [
     "pychub>=1.0.0"
 ]
 packages = [{ include = "pychub_poetry_plugin", from = "src" }]
-requires-python = "^3.9"
+requires-python = ">=3.9"
 
 [project.entry-points."poetry.application.plugin"]
 pychub-poetry-plugin = "pychub_poetry_plugin.plugin:PychubPoetryPlugin"

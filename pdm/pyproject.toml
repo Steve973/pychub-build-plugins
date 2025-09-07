@@ -10,7 +10,7 @@ dependencies = [
     "pdm>=2.25.0,<3.0.0"
 ]
 packages = [{ include = "pychub_pdm_plugin", from = "src" }]
-requires-python = "^3.9"
+requires-python = ">=3.9"
 
 [project.entry-points."pdm.build.hook"]
 pychub = "pychub_pdm_plugin.plugin:PychubBuildHook"
