@@ -121,6 +121,8 @@ jobs:
           user: __token__
           password: ${{ secrets.TESTPYPI_ACCOUNT_TOKEN }}
           repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist
+          skip-existing: true
 
   publish:
     needs: [check]
@@ -153,6 +155,8 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_ACCOUNT_TOKEN }}
           repository-url: https://upload.pypi.org/legacy/
+          packages-dir: dist
+          skip-existing: true
 
       # --- GitHub Release (only on tags) ---
       - name: Create GitHub Release and upload wheel
