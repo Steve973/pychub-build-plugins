@@ -52,6 +52,7 @@ jobs:
           chmod +x setup.sh
           ./setup.sh
           source .venv/bin/activate
+          poetry env use system
           for sp in hatch pdm poetry; do
             pushd "$sp"
             poetry build -o ../dist/
