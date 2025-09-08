@@ -67,7 +67,7 @@ jobs:
           if not wheels:
               print("No hatch plugin wheel found in dist/", file=sys.stderr)
               sys.exit(1)
-          whl = wheels[0]  # or: next(iter(wheels))
+          whl = wheels[0]
           m = re.search(r"pychub_hatch_plugin-([0-9]+\.[0-9]+\.[0-9]+)-", whl.name)
           if not m:
               print(f"Cannot parse MAJOR.MINOR.PATCH from {whl.name}", file=sys.stderr)
@@ -196,7 +196,7 @@ jobs:
           files: dist/*
 
   post-publish-smoke-test:
-    needs: [publish, publish_test_pypi]
+    needs: [build, publish, publish_test_pypi]
     if: ${{ always() && (
           needs.publish.outputs.published == 'true' ||
           needs.publish_test_pypi.outputs.published == 'true'
