@@ -52,6 +52,7 @@ jobs:
           chmod +x setup.sh
           ./setup.sh
           source .venv/bin/activate
+          python -m pip uninstall -y pychub-hatch-plugin pychub-pdm-plugin pychub-poetry-plugin || true
           poetry env use system
           for sp in hatch pdm poetry; do
             pushd "$sp"
