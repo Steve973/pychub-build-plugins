@@ -158,6 +158,23 @@ jobs:
     env:
       VER: ${{ needs.build.outputs.version }}
     steps:
+      - name: Wait for TestPyPI to serve $VER
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://test.pypi.org/pypi"
+          pkgs=(pychub-hatch-plugin pychub-pdm-plugin pychub-poetry-plugin)
+          for attempt in {1..30}; do
+            missing=()
+            for p in "${pkgs[@]}"; do
+              curl -fsS "$base/$p/$VER/json" >/dev/null || missing+=("$p")
+            done
+            if [ ${#missing[@]} -eq 0 ]; then
+              echo "All packages for $VER visible on TestPyPI"
+              break
+            fi
+            echo "Waiting for: ${missing[*]} (attempt $attempt/30)"; sleep 5
+          done
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - name: Install from index and assert entrypoints
@@ -191,6 +208,23 @@ jobs:
     env:
       VER: ${{ needs.build.outputs.version }}
     steps:
+      - name: Wait for PyPI to serve $VER
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://pypi.org/pypi"
+          pkgs=(pychub-hatch-plugin pychub-pdm-plugin pychub-poetry-plugin)
+          for attempt in {1..30}; do
+            missing=()
+            for p in "${pkgs[@]}"; do
+              curl -fsS "$base/$p/$VER/json" >/dev/null || missing+=("$p")
+            done
+            if [ ${#missing[@]} -eq 0 ]; then
+              echo "All packages for $VER visible on PyPI"
+              break
+            fi
+            echo "Waiting for: ${missing[*]} (attempt $attempt/30)"; sleep 5
+          done
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - name: Install from index and assert entrypoints
