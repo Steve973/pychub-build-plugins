@@ -47,8 +47,10 @@ jobs:
             **/requirements*.txt
 
       - name: Build distribution
+        shell: bash
         run: |
-          sh setup.sh
+          chmod +x setup.sh
+          ./setup.sh
           source .venv/bin/activate
           for sp in hatch pdm poetry; do
             pushd "$sp"
@@ -78,7 +80,7 @@ jobs:
               f.write(f"version={ver}\n")
           PY
 
-      - name: Upload hatch dist
+      - name: Upload dist
         uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -88,30 +90,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.9 (with pip cache)
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-          cache: pip
-          cache-dependency-path: |
-            **/pyproject.toml
-            **/poetry.lock
-            **/requirements*.txt
-
-      - name: Download dist
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
       - name: Twine check
         run: |
-          sh setup.sh
-          source .venv/bin/activate
-          pip install -U twine
+          python -m pip install -U pip twine
           twine check dist/*
 
   publish_test_pypi:
@@ -123,23 +108,8 @@ jobs:
       github.ref == 'refs/heads/main'
     environment: pypi
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Build distribution
-        run: |
-          sh setup.sh
-          source .venv/bin/activate
-          for sp in hatch pdm poetry; do
-            pushd "$sp"
-            poetry build -o ../dist/
-            popd
-          done
-
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
       - name: Publish to TestPyPI
         id: upload
         if: github.ref == 'refs/heads/main'
@@ -160,31 +130,15 @@ jobs:
       startsWith(github.ref, 'refs/tags/')
     environment: pypi
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Build distribution
-        run: |
-          sh setup.sh
-          source .venv/bin/activate
-          for sp in hatch pdm poetry; do
-            pushd "$sp"
-            poetry build -o ../dist/
-            popd
-          done
-
-      - name: Publish to PyPI.org
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
+      - name: Publish to PyPI
         id: upload
         if: startsWith(github.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_ACCOUNT_TOKEN }}
-          repository-url: https://upload.pypi.org/legacy/
           packages-dir: dist
           skip-existing: true
 
