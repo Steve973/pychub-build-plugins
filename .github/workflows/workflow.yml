@@ -195,15 +195,11 @@ jobs:
         with:
           files: dist/*
 
-  post-publish-smoke-test:
-    needs: [build, publish, publish_test_pypi]
-    if: ${{ always() && (
-          needs.publish.outputs.published == 'true' ||
-          needs.publish_test_pypi.outputs.published == 'true'
-        ) }}
+  post-publish-smoke-test-testpypi:
+    needs: [build, publish_test_pypi]
+    if: ${{ always() && (needs.publish_test_pypi.outputs.published == 'true') }}
     runs-on: ubuntu-latest
     env:
-      INDEX_URL: ${{ (fromJSON(needs.publish.outputs.published || 'false') && 'https://pypi.org/simple/') || 'https://test.pypi.org/simple/' }}
       VER: ${{ needs.build.outputs.version }}
     steps:
       - uses: actions/setup-python@v5
@@ -213,16 +209,53 @@ jobs:
         run: |
           python -m venv .v && source .v/bin/activate
           python -m pip install -U pip
-          EXTRA=""
-          if [ "$INDEX_URL" = "https://test.pypi.org/simple/" ]; then
-            EXTRA="--extra-index-url https://pypi.org/simple/"
-          fi
-          python -m pip install --index-url "$INDEX_URL" $EXTRA \
-          "pychub-hatch-plugin==$VER" "pychub-pdm-plugin==$VER" "pychub-poetry-plugin==$VER"
+          python -m pip install \
+            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            "pychub-hatch-plugin==$VER" \
+            "pychub-pdm-plugin==$VER" \
+            "pychub-poetry-plugin==$VER"
           python - <<'PY'
           from importlib.metadata import entry_points
-          assert any(ep.name=="pychub" for ep in entry_points(group="hatch")), "hatch hook missing"
-          assert any(ep.name=="pychub" for ep in entry_points(group="pdm.build.hook")), "pdm hook missing"
-          assert any(ep.name=="pychub-poetry-plugin" for ep in entry_points(group="poetry.application.plugin")), "poetry plugin missing"
+          eps = entry_points()
+          ep_map: dict[str, tuple[str, str]] = {
+              "hatch": ("pychub", "hatch"),
+              "pdm": ("pychub", "pdm.build.hook"),
+              "poetry": ("pychub-poetry-plugin", "poetry.application.plugin")
+          }
+          for build_tool, (ep_name, group) in ep_map.items():
+              assert any(ep.name == ep_name for ep in eps.select(group=group)), f"{build_tool} hook missing"
+          print("Post-publishing verification OK")
+          PY
+
+  post-publish-smoke-test-pypi:
+    needs: [build, publish]
+    if: ${{ always() && (needs.publish.outputs.published == 'true') }}
+    runs-on: ubuntu-latest
+    env:
+      VER: ${{ needs.build.outputs.version }}
+    steps:
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install from index and assert entrypoints
+        shell: bash
+        run: |
+          python -m venv .v && source .v/bin/activate
+          python -m pip install -U pip
+          python -m pip install \
+            --index-url https://pypi.org/simple/ \
+            "pychub-hatch-plugin==$VER" \
+            "pychub-pdm-plugin==$VER" \
+            "pychub-poetry-plugin==$VER"
+          python - <<'PY'
+          from importlib.metadata import entry_points
+          eps = entry_points()
+          ep_map: dict[str, tuple[str, str]] = {
+              "hatch": ("pychub", "hatch"),
+              "pdm": ("pychub", "pdm.build.hook"),
+              "poetry": ("pychub-poetry-plugin", "poetry.application.plugin")
+          }
+          for build_tool, (ep_name, group) in ep_map.items():
+              assert any(ep.name == ep_name for ep in eps.select(group=group)), f"{build_tool} hook missing"
           print("Post-publishing verification OK")
           PY
