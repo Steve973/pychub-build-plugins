@@ -1,6 +1,6 @@
 [project]
 name = "pychub-pdm-plugin"
-version = "0.5.0"
+version = "1.0.0"
 description = "Pdm build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
