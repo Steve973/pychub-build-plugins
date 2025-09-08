@@ -167,7 +167,10 @@ jobs:
           for attempt in {1..30}; do
             missing=()
             for p in "${pkgs[@]}"; do
-              curl -fsS "$base/$p/$VER/json" >/dev/null || missing+=("$p")
+              page="$(curl -fsS -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$base/$p/")"
+              if ! grep -E "(${p//-/_}|${p//_/-})-${VER}(-|%2B).*\.whl" <<<"$page" >/dev/null; then
+                missing+=("$p")
+              fi
             done
             if [ ${#missing[@]} -eq 0 ]; then
               echo "All packages for $VER visible on TestPyPI"
@@ -182,7 +185,7 @@ jobs:
         run: |
           python -m venv .v && source .v/bin/activate
           python -m pip install -U pip
-          python -m pip install \
+          python -m pip install --no-cache-dir \
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple/ \
             "pychub-hatch-plugin==$VER" \
@@ -217,7 +220,10 @@ jobs:
           for attempt in {1..30}; do
             missing=()
             for p in "${pkgs[@]}"; do
-              curl -fsS "$base/$p/$VER/json" >/dev/null || missing+=("$p")
+              page="$(curl -fsS -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$base/$p/")"
+              if ! grep -E "(${p//-/_}|${p//_/-})-${VER}(-|%2B).*\.whl" <<<"$page" >/dev/null; then
+                missing+=("$p")
+              fi
             done
             if [ ${#missing[@]} -eq 0 ]; then
               echo "All packages for $VER visible on PyPI"
@@ -232,7 +238,7 @@ jobs:
         run: |
           python -m venv .v && source .v/bin/activate
           python -m pip install -U pip
-          python -m pip install \
+          python -m pip install --no-cache-dir \
             --index-url https://pypi.org/simple/ \
             "pychub-hatch-plugin==$VER" \
             "pychub-pdm-plugin==$VER" \

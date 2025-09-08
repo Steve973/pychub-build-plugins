@@ -1,6 +1,6 @@
 [project]
 name = "pychub-hatch-plugin"
-version = "1.0.2"
+version = "1.0.3"
 description = "Hatch build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
