@@ -49,6 +49,7 @@ jobs:
       - name: Build distribution
         shell: bash
         run: |
+          pip install -U pip poetry
           chmod +x setup.sh
           ./setup.sh
           source .venv/bin/activate
