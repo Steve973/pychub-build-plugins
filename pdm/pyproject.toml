@@ -1,18 +1,13 @@
 [project]
 name = "pychub-pdm-plugin"
-version = "1.0.3"
+version = "1.0.4"
 description = "Pdm build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
 readme = "README.md"
 license = "MIT"
-dependencies = [
-    "pychub>=1.0.0",
-    "pdm>=2.25.0,<3.0.0"
-]
-packages = [{ include = "pychub_pdm_plugin", from = "src" }]
-requires-python = ">=3.9"
+requires-python = ">=3.9,<4.0"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -47,6 +42,17 @@ keywords = [
 [project.entry-points."pdm.build.hook"]
 pychub = "pychub_pdm_plugin.plugin:PychubBuildHook"
 
+[tool.poetry]
+packages = [{ include = "pychub_pdm_plugin", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+pychub = ">=1.1.0"
+pdm = ">=2.25.0,<3.0.0"
+
+[tool.poetry-monoranger-plugin]
+enabled = true
+
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.1.1"]
 build-backend = "poetry.core.masonry.api"

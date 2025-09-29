@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 print_status() {
   local msg="$1"
   local status="$2"
@@ -31,43 +33,67 @@ print_status() {
   fi
 }
 
-print_status "Setting up pychubby-dev environment..." info
+maybe_delete_venv() {
+  if [ -d "${SCRIPT_DIR}/.venv" ]; then
+    rm -rf "${SCRIPT_DIR}/.venv" && print_status "Removing and re-creating project .venv" ok
+  fi
+}
 
-# Step 1: Create .venv
-if [ ! -d ".venv" ]; then
-  python3 -m venv .venv && print_status "Created virtual environment" ok
-else
-  print_status ".venv already exists" warn
-fi
+clean_pycache() {
+  local find_args
+  find_args=(
+    "${SCRIPT_DIR}"
+    -ignore_readdir_race
+    -type d
+    -name "__pycache__"
+    -exec rm -rf {} +
+  )
+  find "${find_args[@]}" && print_status "Removed pycache dirs" ok
+}
 
-# Step 2: Activate it
-# shellcheck disable=SC1091
-source .venv/bin/activate && print_status "Activated virtual environment" ok
+clean_lock_files() {
+  local find_args
+  find_args=(
+    "${SCRIPT_DIR}"
+    -ignore_readdir_race
+    -type f
+    -name "poetry.lock"
+    -exec rm -f {} +
+  )
+  find "${find_args[@]}" && print_status "Removed poetry lock files" ok
+}
 
-# Step 3: Ensure pip is upgraded before using it
-python3 -m pip install --upgrade pip poetry build pytest pychub >/dev/null 2>&1 && print_status "Upgraded pip and poetry" ok
+init_venv() {
+  poetry config virtualenvs.in-project true --local
+  poetry install --no-root --with dev
+  source "${SCRIPT_DIR}/.venv/bin/activate" && print_status "Activated virtual environment" ok
+}
 
-# Make Poetry use THIS env (no nested virtualenvs)
-poetry env use system
-
-# Step 4: Add monoranger plugin (skip if already installed)
-if ! poetry self show plugins | grep -q "poetry-monoranger-plugin"; then
+install_monoranger_plugin() {
   if poetry self add poetry-monoranger-plugin >/dev/null 2>&1; then
     print_status "Enabled poetry-monoranger-plugin" ok
   else
     print_status "Could not enable poetry-monoranger-plugin" fail
     exit 1
   fi
-else
-  print_status "poetry-monoranger-plugin already enabled" warn
-fi
+}
 
-# Step 5: Install workspace dependencies
-if poetry install; then
-  print_status "Installed all project dependencies" ok
-else
-  print_status "poetry install failed" fail
-  exit 1
-fi
+install_project() {
+  if poetry install --no-root --with dev; then
+    print_status "Installed all project dependencies" ok
+  else
+    print_status "poetry install failed" fail
+    exit 1
+  fi
+}
+
+print_status "Setting up the development environment..." info
+
+maybe_delete_venv
+clean_pycache
+clean_lock_files
+init_venv
+install_monoranger_plugin
+install_project
 
 print_status "Project setup complete. You can now open your IDE." ok

@@ -1,14 +1,13 @@
 [project]
 name = "pychub-build-plugins"
-version = "1.0.3"
+version = "1.0.4"
 description = "Build tool plugin collection for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
 readme = "README.md"
 license = "MIT"
-dynamic = [ "dependencies" ]
-requires-python = ">=3.9"
+requires-python = ">=3.9,<4.0"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -39,28 +38,19 @@ keywords = [
     "zipapp"
 ]
 
-[project.optional-dependencies]
-test = [
-    "pytest>=8.4.1",
-    'tomli>=2.2; python_version < "3.11"',
-    "hatch>=1.14.0",
-    "pdm>=2.25.0"
-]
-
 [tool.poetry]
 package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pychub = "^1.0.0"
+pychub = "^1.1.0"
 pychub-hatch-plugin  = { path = "hatch",  develop = true }
 pychub-pdm-plugin    = { path = "pdm",    develop = true }
 pychub-poetry-plugin = { path = "poetry", develop = true }
 
-[tool.poetry-monoranger-plugin]
-enabled = true
-monorepo-root = "../pychub-build-plugins"
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.4.1"
 
 [build-system]
-requires = ["poetry-core>=2.1.0"]
+requires = ["poetry-core>=2.1.1"]
 build-backend = "poetry.core.masonry.api"

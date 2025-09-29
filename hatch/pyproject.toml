@@ -1,18 +1,13 @@
 [project]
 name = "pychub-hatch-plugin"
-version = "1.0.3"
+version = "1.0.4"
 description = "Hatch build plugin for pychub"
 authors = [
     { name = "Steve Storck", email = "steve973@gmail.com" }
 ]
 readme = "README.md"
 license = "MIT"
-dependencies = [
-    "pychub>=1.0.0",
-    "hatchling>=1.27.0"
-]
-packages = [{ include = "pychub_hatch_plugin", from = "src" }]
-requires-python = ">=3.9"
+requires-python = ">=3.9,<4.0"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -48,6 +43,17 @@ keywords = [
 [project.entry-points.hatch]
 pychub = "pychub_hatch_plugin.hooks"
 
+[tool.poetry]
+packages = [{ include = "pychub_hatch_plugin", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+pychub = ">=1.1.0"
+hatchling = ">=1.27.0"
+
+[tool.poetry-monoranger-plugin]
+enabled = true
+
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.1.1"]
 build-backend = "poetry.core.masonry.api"
