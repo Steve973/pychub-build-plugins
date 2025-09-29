@@ -33,6 +33,6 @@ runs:
       if: ${{ inputs.pytest-path != '' }}
       shell: bash
       run: |
-        sh setup.sh
+        bash setup.sh
         source .venv/bin/activate
         poetry run pytest -q "${{ inputs.pytest-path }}"
